@@ -1,4 +1,9 @@
 {
+  "accountAssociation": {
+    "header": "eyJ…",
+    "payload": "eyJ…",
+    "signature": "puc…"
+  },
   "frame": {
     "name": "still-basing",
     "version": "1",

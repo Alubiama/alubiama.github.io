@@ -1,0 +1,19 @@
+{
+  "frame": {
+    "name": "still-basing",
+    "version": "1",
+    "iconUrl": "https://alubiama.github.io/StillBASING/icon-1024.png",
+    "homeUrl": "https://alubiama.github.io/StillBASING/",
+    "subtitle": "Click to grow on Base blockchain",
+    "description": "On-chain clicker game on Base. Every click counts",
+    "primaryCategory": "games",
+    "heroImageUrl": "https://alubiama.github.io/StillBASING/hero-1200x630.png",
+    "splashImageUrl": "https://alubiama.github.io/StillBASING/splash-200.png",
+    "splashBackgroundColor": "#0000FF",
+    "tags": ["game", "onchain", "base", "clicker"],
+    "tagline": "Click, grow, and earn on Base",
+    "ogTitle": "StillBasing",
+    "ogDescription": "Click to grow on Base blockchain. Earn achievements and claim NFTs",
+    "ogImageUrl": "https://alubiama.github.io/StillBASING/og-1200x630.png"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Still Basing - On-Chain Clicker",
+  "short_name": "StillBasing",
+  "description": "Click to grow on Base blockchain. Earn achievements and claim NFTs with every milestone you reach.",
+  "start_url": "/StillBASING/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0000FF",
+  "orientation": "portrait-primary",
+  "categories": ["web3", "blockchain", "games"],
+  "icons": [
+    {
+      "src": "/StillBASING/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/StillBASING/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "scope": "/StillBASING/",
+  "dir": "ltr",
+  "lang": "en-US"
+}

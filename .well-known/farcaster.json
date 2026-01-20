@@ -5,20 +5,26 @@
     "signature": "pucUxoNJn5DxfzA2GbkuFf84UsSnY+4uFQDaeqP8ME07KWrTGh+2PcouTOEX+kpoe0afKYs3FoL+8tUY9OUVlRs="
   },
   "frame": {
-    "name": "still-basing",
     "version": "1",
-    "iconUrl": "https://alubiama.github.io/StillBASING/icon-1024.png",
-    "homeUrl": "https://alubiama.github.io/StillBASING/",
-    "subtitle": "Grow on Base",
-    "description": "On-chain clicker game on Base. Every click counts",
-    "primaryCategory": "games",
-    "heroImageUrl": "https://alubiama.github.io/StillBASING/hero-1200x630.png",
-    "splashImageUrl": "https://alubiama.github.io/StillBASING/splash-200.png",
+    "name": "Still Basing",
+    "homeUrl": "https://alubiama.github.io/",
+    "iconUrl": "https://alubiama.github.io/icon-1024.png",
+    "splashImageUrl": "https://alubiama.github.io/splash-200.png",
     "splashBackgroundColor": "#0000FF",
-    "tags": ["game", "onchain", "base", "clicker"],
+    "buttonTitle": "Play Now",
+    "subtitle": "Click to grow on Base blockchain",
+    "description": "An interactive on-chain clicker game where every click counts. Earn achievements at milestones and claim unique NFTs. All actions are recorded on Base blockchain.",
+    "primaryCategory": "games",
+    "tags": ["clicker", "onchain", "nft", "achievements", "base"],
     "tagline": "Click, grow, and earn on Base",
-    "ogTitle": "StillBasing",
-    "ogDescription": "Click to grow on Base blockchain. Earn achievements and claim NFTs",
-    "ogImageUrl": "https://alubiama.github.io/StillBASING/og-1200x630.png"
+    "heroImageUrl": "https://alubiama.github.io/hero-1200x630.png",
+    "screenshotUrls": [
+      "https://alubiama.github.io/screenshot-1.png",
+      "https://alubiama.github.io/screenshot-2.png",
+      "https://alubiama.github.io/screenshot-3.png"
+    ],
+    "ogTitle": "Still Basing - On-Chain Clicker",
+    "ogDescription": "Click to grow on Base blockchain. Earn achievements and claim NFTs with every milestone you reach.",
+    "ogImageUrl": "https://alubiama.github.io/og-1200x630.png"
   }
 }

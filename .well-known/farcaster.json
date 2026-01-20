@@ -12,7 +12,7 @@
     "splashImageUrl": "https://alubiama.github.io/splash-200.png",
     "splashBackgroundColor": "#0000FF",
     "buttonTitle": "Play Now",
-    "subtitle": "Click to grow on Base blockchain",
+    "subtitle": "Grow on Base blockchain",
     "description": "An interactive on-chain clicker game where every click counts. Earn achievements at milestones and claim unique NFTs. All actions are recorded on Base blockchain.",
     "primaryCategory": "games",
     "tags": ["clicker", "onchain", "nft", "achievements", "base"],
@@ -23,7 +23,7 @@
       "https://alubiama.github.io/screenshot-2.png",
       "https://alubiama.github.io/screenshot-3.png"
     ],
-    "ogTitle": "Still Basing - On-Chain Clicker",
+    "ogTitle": "Still Basing On-Chain Game",
     "ogDescription": "Click to grow on Base blockchain. Earn achievements and claim NFTs with every milestone you reach.",
     "ogImageUrl": "https://alubiama.github.io/og-1200x630.png"
   }

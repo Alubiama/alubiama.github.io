@@ -591,6 +591,8 @@ body.dark-mode .nft-price { color: #5c7cfa; }
 .claim-button.locked { background: #999; }
 body.dark-mode .claim-button { background: #5c7cfa; }
 body.dark-mode .claim-button:hover:not(:disabled) { background: #4c6ef5; }
+.claim-button.minting { background: #666; cursor: wait; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .7; } }
 .zora-credit { text-align: center; margin-top: 32px; font-size: 14px; color: #666; }
 body.dark-mode .zora-credit { color: #aaa; }
 .zora-credit a { color: #00f; text-decoration: none; font-weight: 600; }

@@ -3,6 +3,7 @@ import {
   STREAK_KEY,
   ACHIEVEMENT_MILESTONES,
   getUnlockedMilestones,
+  getNextMilestone,
 } from '../constants'
 
 export default function AchievementsScreen() {
@@ -21,6 +22,7 @@ export default function AchievementsScreen() {
   }, [])
 
   const unlocked = getUnlockedMilestones(streakCount)
+  const next = getNextMilestone(streakCount)
 
   return (
     <div className="screen-container achievements-screen">
@@ -30,28 +32,51 @@ export default function AchievementsScreen() {
           Unlock achievements by maintaining your daily streak
         </p>
 
-        <div className="achievements-list">
+        <div className="achievements-grid">
           {ACHIEVEMENT_MILESTONES.map((milestone) => {
             const isUnlocked = streakCount >= milestone.day
+            const isCurrent = next && next.day === milestone.day
+            const progress = isCurrent
+              ? ((streakCount / milestone.day) * 100).toFixed(0)
+              : isUnlocked
+                ? 100
+                : 0
+
             return (
               <div
                 key={milestone.day}
                 className={`achievement-card ${isUnlocked ? 'unlocked' : 'locked'}`}
               >
-                <span className="achievement-emoji">{milestone.emoji}</span>
+                <div className="achievement-icon">{milestone.emoji}</div>
                 <div className="achievement-info">
-                  <h3>{milestone.title}</h3>
-                  <p>{milestone.description}</p>
-                  <span className="achievement-requirement">
-                    Day {milestone.day}
-                  </span>
+                  <div className="achievement-title">
+                    {milestone.title}
+                    {isUnlocked && <span className="badge">Unlocked</span>}
+                    {isCurrent && <span className="badge current">Current</span>}
+                  </div>
+                  <div className="achievement-description">{milestone.description}</div>
+                  <div className="achievement-requirement">Day {milestone.day}</div>
+                  {isCurrent && (
+                    <div className="achievement-progress">
+                      <div className="achievement-progress-bar">
+                        <div
+                          className="achievement-progress-fill"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                      <div className="achievement-progress-text">
+                        {streakCount} / {milestone.day} days
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <span className="achievement-status">
-                  {isUnlocked ? '\u2705' : '\u{1F512}'}
-                </span>
               </div>
             )
           })}
+        </div>
+
+        <div className="achievements-footer">
+          {unlocked.length} of {ACHIEVEMENT_MILESTONES.length} achievements unlocked
         </div>
       </div>
     </div>

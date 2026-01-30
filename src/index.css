@@ -1,0 +1,741 @@
+/* ==================== RESET & BASE ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #f5f5ff;
+  --bg-card: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #666;
+  --accent: #0052FF;
+  --accent-hover: #0040dd;
+  --accent-light: #e6ecff;
+  --border: #e0e0e8;
+  --success: #00c853;
+  --error: #ff3d00;
+  --nav-bg: #ffffff;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --radius: 16px;
+}
+
+body.dark-mode {
+  --bg: #0a0a1a;
+  --bg-card: #1a1a2e;
+  --text: #e0e0ff;
+  --text-secondary: #888;
+  --accent: #4d7cff;
+  --accent-hover: #3366ff;
+  --accent-light: #1a1a3e;
+  --border: #2a2a4e;
+  --nav-bg: #12122a;
+  --shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ==================== WALLET SECTION ==================== */
+.wallet-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  gap: 8px;
+}
+
+.theme-toggle {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.theme-toggle:hover {
+  background: var(--accent-light);
+}
+
+/* ==================== SCREENS ==================== */
+.screen-container {
+  flex: 1;
+  padding: 16px;
+  padding-bottom: 80px;
+  overflow-y: auto;
+}
+
+.screen-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.screen-subtitle {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* ==================== PLAY SCREEN ==================== */
+.play-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  padding-top: 20px;
+}
+
+.basing-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  word-break: break-all;
+  max-width: 100%;
+}
+
+.streak-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.streak-number {
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.streak-label {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.click-button {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 4px solid var(--accent);
+  background: var(--accent);
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 20px rgba(0, 82, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.click-button:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 6px 30px rgba(0, 82, 255, 0.4);
+}
+
+.click-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.click-button.animating {
+  animation: pulse 0.6s ease-out;
+}
+
+.click-button.clicked {
+  background: var(--success);
+  border-color: var(--success);
+  box-shadow: 0 4px 20px rgba(0, 200, 83, 0.3);
+}
+
+.click-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* ==================== MILESTONE PROGRESS ==================== */
+.milestone-progress {
+  width: 100%;
+  max-width: 320px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.milestone-progress.completed {
+  border-color: var(--success);
+  background: rgba(0, 200, 83, 0.05);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.progress-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ==================== TOAST ==================== */
+.toast {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 1000;
+  animation: slideDown 0.3s ease;
+  max-width: 90%;
+  text-align: center;
+}
+
+.toast.success {
+  background: var(--success);
+  color: white;
+}
+
+.toast.error {
+  background: var(--error);
+  color: white;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* ==================== DEBUG ==================== */
+.debug-panel {
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(255, 200, 0, 0.1);
+  border: 1px solid rgba(255, 200, 0, 0.3);
+  border-radius: var(--radius);
+  font-size: 12px;
+}
+
+.debug-button {
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: #ffc800;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ==================== STATS SCREEN ==================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.text-preview {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.text-preview h3 {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.preview-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  word-break: break-all;
+}
+
+.wallet-info {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.wallet-info h3 {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.wallet-address {
+  font-size: 14px;
+  font-family: monospace;
+  color: var(--text-secondary);
+}
+
+/* ==================== ACHIEVEMENTS ==================== */
+.achievements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.achievement-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  transition: opacity 0.2s;
+}
+
+.achievement-card.locked {
+  opacity: 0.5;
+}
+
+.achievement-emoji {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.achievement-info {
+  flex: 1;
+}
+
+.achievement-info h3 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.achievement-info p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.achievement-requirement {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.achievement-status {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+/* ==================== NFT SCREEN ==================== */
+.nft-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nft-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: opacity 0.2s;
+}
+
+.nft-card.locked {
+  opacity: 0.6;
+}
+
+.nft-image-link {
+  display: block;
+}
+
+.nft-image {
+  width: 100%;
+  height: 200px;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.nft-image-actual {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nft-emoji {
+  font-size: 64px;
+}
+
+.nft-lock-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+}
+
+.nft-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--success);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.nft-info {
+  padding: 16px;
+}
+
+.nft-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.nft-description {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.nft-requirement {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.nft-price {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.nft-progress {
+  margin-bottom: 12px;
+}
+
+.nft-progress-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.nft-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.nft-progress-text {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.claim-button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  background: var(--accent);
+  color: white;
+  transition: background 0.2s;
+}
+
+.claim-button:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.claim-button.claimed {
+  background: var(--success);
+}
+
+.claim-button.locked {
+  background: var(--border);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+.zora-credit {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.zora-credit a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ==================== EMPTY STATE ==================== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 20px;
+  gap: 12px;
+}
+
+.empty-icon {
+  font-size: 48px;
+}
+
+.empty-state h2 {
+  font-size: 20px;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* ==================== BOTTOM NAV ==================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--nav-bg);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0 env(safe-area-inset-bottom, 8px);
+  z-index: 100;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: 8px;
+  transition: color 0.2s;
+}
+
+.nav-item.active {
+  color: var(--accent);
+}
+
+.nav-icon {
+  font-size: 20px;
+}
+
+/* ==================== ONBOARDING ==================== */
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.onboarding-modal {
+  background: var(--bg-card);
+  border-radius: 24px;
+  padding: 32px 24px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.onboarding-modal h1 {
+  font-size: 28px;
+  margin-bottom: 16px;
+  color: var(--accent);
+}
+
+.onboarding-content {
+  text-align: left;
+}
+
+.onboarding-content .intro {
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.feature-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.feature-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.feature-item h3 {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.feature-item p {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.onboarding-note {
+  background: var(--accent-light);
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+.onboarding-note strong {
+  color: var(--text);
+}
+
+.onboarding-button {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: var(--accent);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.onboarding-button:hover {
+  background: var(--accent-hover);
+}
+
+/* ==================== STATUS MESSAGE ==================== */
+.status-message {
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.status-message.success {
+  background: rgba(0, 200, 83, 0.1);
+  color: var(--success);
+}
+
+.status-message.error {
+  background: rgba(255, 61, 0, 0.1);
+  color: var(--error);
+}

@@ -1,18 +1,33 @@
 import { useState, useEffect } from 'react'
-import { useAccount, useReadContracts } from 'wagmi'
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContracts } from 'wagmi'
+import { parseEther } from 'viem'
 import {
   NFT_MILESTONES,
   ZORA_COIN_ABI,
   STREAK_KEY_PREFIX,
 } from '../constants'
 
+const REFERRER = '0x47550e121654FED9Bc17ed2f684E902a4B1fF102'
+const BUY_AMOUNT = parseEther('0.001')
+
 export default function NftScreen() {
   const { address, isConnected, chainId } = useAccount()
-  const [mintStatus, setMintStatus] = useState(null)
-  const [mintError, setMintError] = useState(null)
-  const [mintLoading, setMintLoading] = useState(null)
   const [streakCount, setStreakCount] = useState(1)
+  const [mintingIndex, setMintingIndex] = useState(null)
+  const [mintSuccess, setMintSuccess] = useState(null)
   const isBase = chainId === 8453
+
+  const {
+    writeContract,
+    data: txHash,
+    isPending,
+    error: writeError,
+    reset,
+  } = useWriteContract()
+
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+    hash: txHash,
+  })
 
   // Load streak
   useEffect(() => {
@@ -44,6 +59,24 @@ export default function NftScreen() {
     enabled: !!address && isBase,
   })
 
+  // Refetch after successful mint
+  useEffect(() => {
+    if (isSuccess) {
+      refetch()
+      setMintSuccess(mintingIndex)
+      setMintingIndex(null)
+      reset()
+      setTimeout(() => setMintSuccess(null), 4000)
+    }
+  }, [isSuccess])
+
+  // Clear error state
+  useEffect(() => {
+    if (writeError) {
+      setMintingIndex(null)
+    }
+  }, [writeError])
+
   const hasNft = (index) => {
     if (!balances || !balances[index]) return false
     const result = balances[index]
@@ -53,13 +86,34 @@ export default function NftScreen() {
     return false
   }
 
+  const handleMint = (nft, index) => {
+    if (!address || isPending || isConfirming) return
+    setMintingIndex(index)
+    setMintSuccess(null)
+
+    writeContract({
+      address: nft.contract,
+      abi: ZORA_COIN_ABI,
+      functionName: 'buy',
+      args: [
+        address,
+        BUY_AMOUNT,
+        0n,
+        0n,
+        REFERRER,
+        'Still Basing!',
+      ],
+      value: BUY_AMOUNT,
+    })
+  }
+
   if (!isConnected) {
     return (
       <div className="screen-container">
         <div className="empty-state">
           <span className="empty-icon">{"\u{1F517}"}</span>
           <h2>Connect Wallet</h2>
-          <p>Connect your wallet to view and claim NFTs</p>
+          <p>Connect your wallet to view and mint NFTs</p>
         </div>
       </div>
     )
@@ -71,7 +125,7 @@ export default function NftScreen() {
         <div className="empty-state">
           <span className="empty-icon">{"\u{1F517}"}</span>
           <h2>Switch to Base</h2>
-          <p>Please switch to Base mainnet to claim NFTs</p>
+          <p>Please switch to Base mainnet to mint NFTs</p>
         </div>
       </div>
     )
@@ -85,11 +139,14 @@ export default function NftScreen() {
           Collect Zora Coins for your streak milestones
         </p>
 
-        {mintStatus && (
-          <div className={`status-message ${mintStatus}`}>
-            {mintStatus === 'success'
-              ? '\u2705 Transaction submitted!'
-              : mintError || 'Processing...'}
+        {writeError && (
+          <div className="status-message error">
+            {writeError.shortMessage || writeError.message || 'Transaction failed'}
+          </div>
+        )}
+        {mintSuccess !== null && (
+          <div className="status-message success">
+            {"\u2705"} Minted successfully!
           </div>
         )}
 
@@ -97,6 +154,7 @@ export default function NftScreen() {
           {NFT_MILESTONES.map((nft, index) => {
             const isUnlocked = streakCount >= nft.days
             const owned = hasNft(index)
+            const isMinting = mintingIndex === index && (isPending || isConfirming)
             const progress = Math.min(
               (streakCount / nft.days) * 100,
               100
@@ -108,7 +166,7 @@ export default function NftScreen() {
                 className={`nft-card ${isUnlocked ? 'unlocked' : 'locked'} ${owned ? 'claimed' : ''}`}
               >
                 <a
-                  href={nft.zoraUrl}
+                  href={`${nft.zoraUrl}?referrer=${REFERRER}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="nft-image-link"
@@ -153,25 +211,25 @@ export default function NftScreen() {
                   )}
 
                   {isUnlocked && !owned && (
-                    <a
-                      href={nft.zoraUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="claim-button"
-                      style={{ textDecoration: 'none', textAlign: 'center', display: 'block' }}
+                    <button
+                      className={`claim-button ${isMinting ? 'minting' : ''}`}
+                      onClick={() => handleMint(nft, index)}
+                      disabled={isMinting}
                     >
-                      View on Zora
-                    </a>
+                      {isMinting
+                        ? (isConfirming ? 'Confirming...' : 'Minting...')
+                        : 'Mint (0.001 ETH)'}
+                    </button>
                   )}
-                  {owned && (
+                  {isUnlocked && owned && (
                     <a
-                      href={nft.zoraUrl}
+                      href={`${nft.zoraUrl}?referrer=${REFERRER}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="claim-button claimed"
                       style={{ textDecoration: 'none', textAlign: 'center', display: 'block' }}
                     >
-                      View on Zora
+                      {"\u2705"} Owned - View on Zora
                     </a>
                   )}
                   {!isUnlocked && (

@@ -91,6 +91,21 @@ body.dark-mode .theme-toggle { background: #1a1a1a; }
 .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 .theme-toggle:active { transform: scale(.95); }
 
+/* Wallet button */
+.wallet-dropdown-wrap { position: relative; }
+.wallet-btn { min-height: 44px; padding: 8px 16px; border: none; border-radius: 12px; background: #00f; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.15); white-space: nowrap; }
+.wallet-btn:hover { background: #00c; transform: translateY(-1px); }
+.wallet-btn.connected { background: #1a1a2e; font-family: monospace; font-size: 13px; }
+body.dark-mode .wallet-btn { background: #5c7cfa; }
+body.dark-mode .wallet-btn:hover { background: #4c6ef5; }
+body.dark-mode .wallet-btn.connected { background: #252540; }
+.wallet-dropdown { position: absolute; top: 100%; right: 0; margin-top: 8px; background: #fff; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); overflow: hidden; min-width: 180px; z-index: 200; }
+body.dark-mode .wallet-dropdown { background: #1a1a2e; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.wallet-dropdown-item { display: block; width: 100%; padding: 14px 16px; border: none; background: none; font-size: 14px; font-weight: 500; color: #333; cursor: pointer; text-align: left; transition: background .15s; }
+.wallet-dropdown-item:hover { background: #f0f0f0; }
+body.dark-mode .wallet-dropdown-item { color: #e0e0e0; }
+body.dark-mode .wallet-dropdown-item:hover { background: #252540; }
+
 /* ==================== STATS SECTION (top-left on play) ==================== */
 .stats-section {
   position: absolute;

@@ -1,15 +1,70 @@
-import { useState, useEffect, useCallback } from 'react'
-import { useAccount } from 'wagmi'
-import { useMiniKit } from '@coinbase/onchainkit/minikit'
-import { ConnectWallet } from '@coinbase/onchainkit/wallet'
+import { useState, useEffect } from 'react'
+import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import PlayScreen from './screens/PlayScreen'
 import StatsScreen from './screens/StatsScreen'
 import AchievementsScreen from './screens/AchievementsScreen'
 import NftScreen from './screens/NftScreen'
 
+function WalletButton() {
+  const { address, isConnected } = useAccount()
+  const { connect, connectors } = useConnect()
+  const { disconnect } = useDisconnect()
+  const [showOptions, setShowOptions] = useState(false)
+
+  if (isConnected) {
+    return (
+      <button className="wallet-btn connected" onClick={() => disconnect()}>
+        {address.slice(0, 6)}...{address.slice(-4)}
+      </button>
+    )
+  }
+
+  // Filter to unique connector names
+  const seen = new Set()
+  const uniqueConnectors = connectors.filter((c) => {
+    if (seen.has(c.name)) return false
+    seen.add(c.name)
+    return true
+  })
+
+  if (uniqueConnectors.length === 1) {
+    return (
+      <button
+        className="wallet-btn"
+        onClick={() => connect({ connector: uniqueConnectors[0] })}
+      >
+        Connect Wallet
+      </button>
+    )
+  }
+
+  return (
+    <div className="wallet-dropdown-wrap">
+      <button className="wallet-btn" onClick={() => setShowOptions(!showOptions)}>
+        Connect Wallet
+      </button>
+      {showOptions && (
+        <div className="wallet-dropdown">
+          {uniqueConnectors.map((connector) => (
+            <button
+              key={connector.uid}
+              className="wallet-dropdown-item"
+              onClick={() => {
+                connect({ connector })
+                setShowOptions(false)
+              }}
+            >
+              {connector.name}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function App() {
   const { isConnected } = useAccount()
-  const { setFrameReady, isFrameReady } = useMiniKit()
 
   const [showOnboarding, setShowOnboarding] = useState(
     () => !localStorage.getItem('onboarding_completed')
@@ -21,12 +76,16 @@ export default function App() {
   )
   const [activeTab, setActiveTab] = useState('play')
 
-  // Signal frame readiness via MiniKit
+  // Signal MiniKit frame readiness (if inside a frame)
   useEffect(() => {
-    if (!isFrameReady) {
-      setFrameReady()
+    try {
+      if (window !== window.parent) {
+        window.parent.postMessage({ type: 'frame_ready' }, '*')
+      }
+    } catch (e) {
+      // not in a frame, ignore
     }
-  }, [setFrameReady, isFrameReady])
+  }, [])
 
   // Dark mode persistence
   useEffect(() => {
@@ -114,7 +173,7 @@ export default function App() {
         >
           {darkMode ? '\u2600\uFE0F' : '\u{1F319}'}
         </button>
-        <ConnectWallet />
+        <WalletButton />
       </div>
 
       {/* Active Screen */}

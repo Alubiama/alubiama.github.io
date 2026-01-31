@@ -1,11 +1,9 @@
-import { useState, useEffect, useCallback, Fragment } from 'react'
+import { useState, useEffect, useCallback, useRef, Fragment } from 'react'
 import { useAccount } from 'wagmi'
 import {
   STREAK_KEY_PREFIX,
   STREAK_KEY,
   DEBUG_WHITELIST,
-  getTodayString,
-  dayDiff,
   getMilestoneByDay,
   getNextMilestone,
 } from '../constants'
@@ -13,6 +11,8 @@ import {
 const COOLDOWN_INCREMENT = 22
 const BASE_WIDTH = 240
 const STRETCH_EXTRA = 160
+const COOLDOWN_MS = 24 * 60 * 60 * 1000   // 24 hours
+const STREAK_BREAK_MS = 48 * 60 * 60 * 1000 // 48 hours — streak resets
 
 export default function PlayScreen() {
   const { isConnected, address } = useAccount()
@@ -23,11 +23,12 @@ export default function PlayScreen() {
   const [streakCount, setStreakCount] = useState(1)
   const [buttonWidth, setButtonWidth] = useState(BASE_WIDTH)
   const [showExtraS, setShowExtraS] = useState(false)
-  const [clickedToday, setClickedToday] = useState(false)
+  const [onCooldown, setOnCooldown] = useState(false)
   const [transitioning, setTransitioning] = useState(false)
   const [showCooldown, setShowCooldown] = useState(false)
   const [countdownText, setCountdownText] = useState('')
   const [toast, setToast] = useState(null)
+  const lastPressRef = useRef(0)
 
   const isDebug = address && DEBUG_WHITELIST.map(a => a.toLowerCase()).includes(address.toLowerCase())
 
@@ -36,27 +37,36 @@ export default function PlayScreen() {
     return STREAK_KEY_PREFIX + address.toLowerCase()
   }, [address])
 
-  const getTimeUntilReset = () => {
-    const now = new Date()
-    const tomorrow = new Date(now)
-    tomorrow.setUTCHours(24, 0, 0, 0)
-    const diff = tomorrow - now
+  const getTimeUntilReset = useCallback(() => {
+    const now = Date.now()
+    const unlockAt = lastPressRef.current + COOLDOWN_MS
+    const diff = unlockAt - now
+    if (diff <= 0) return null
     const h = Math.floor(diff / (1000 * 60 * 60))
     const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
     const s = Math.floor((diff % (1000 * 60)) / 1000)
     return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
-  }
+  }, [])
 
   // Countdown timer for cooldown display
   useEffect(() => {
-    if (clickedToday || showCooldown) {
-      const interval = setInterval(() => {
-        setCountdownText(getTimeUntilReset())
-      }, 1000)
-      setCountdownText(getTimeUntilReset())
+    if (onCooldown || showCooldown) {
+      const tick = () => {
+        const text = getTimeUntilReset()
+        if (text) {
+          setCountdownText(text)
+        } else {
+          setOnCooldown(false)
+          setShowCooldown(false)
+          setTransitioning(false)
+          setCountdownText('')
+        }
+      }
+      tick()
+      const interval = setInterval(tick, 1000)
       return () => clearInterval(interval)
     }
-  }, [clickedToday, showCooldown])
+  }, [onCooldown, showCooldown, getTimeUntilReset])
 
   // Load streak on mount / address change
   useEffect(() => {
@@ -64,7 +74,7 @@ export default function PlayScreen() {
       loadStreak()
     } else {
       setStreakCount(1)
-      setClickedToday(false)
+      setOnCooldown(false)
       setButtonWidth(BASE_WIDTH)
     }
   }, [address])
@@ -76,19 +86,27 @@ export default function PlayScreen() {
         const raw = localStorage.getItem(key)
         if (raw) {
           const data = JSON.parse(raw)
-          const today = getTodayString()
-          const lastDay = data.lastStreakDay
-          if (lastDay === today) {
+          const now = Date.now()
+          const lastPress = data.lastPressTime || 0
+          const elapsed = now - lastPress
+
+          lastPressRef.current = lastPress
+
+          if (lastPress && elapsed < COOLDOWN_MS) {
+            // Still on cooldown
             setStreakCount(data.streakCount)
-            setClickedToday(true)
+            setOnCooldown(true)
+            setShowCooldown(true)
             setButtonWidth(BASE_WIDTH + (data.streakCount - 1) * COOLDOWN_INCREMENT)
-          } else if (dayDiff(lastDay, today) === 1) {
+          } else if (lastPress && elapsed < STREAK_BREAK_MS) {
+            // Cooldown passed, streak alive — can press again
             setStreakCount(data.streakCount)
-            setClickedToday(false)
+            setOnCooldown(false)
             setButtonWidth(BASE_WIDTH + (data.streakCount - 1) * COOLDOWN_INCREMENT)
           } else {
+            // Streak broken (>48h or no data)
             setStreakCount(1)
-            setClickedToday(false)
+            setOnCooldown(false)
             setButtonWidth(BASE_WIDTH)
           }
         }
@@ -102,7 +120,9 @@ export default function PlayScreen() {
     const key = getStorageKey()
     if (key) {
       try {
-        const data = { lastStreakDay: getTodayString(), streakCount: newCount }
+        const now = Date.now()
+        const data = { lastPressTime: now, streakCount: newCount }
+        lastPressRef.current = now
         localStorage.setItem(key, JSON.stringify(data))
         localStorage.setItem(STREAK_KEY, JSON.stringify(data))
         const longest = parseInt(localStorage.getItem('stillbasing_longest') || '0', 10)
@@ -122,7 +142,7 @@ export default function PlayScreen() {
   }, [])
 
   const handleClick = async () => {
-    if (!isConnected || !address || animating || clickedToday) return
+    if (!isConnected || !address || animating || onCooldown) return
 
     setAnimating(true)
     setStretched(true)
@@ -161,7 +181,7 @@ export default function PlayScreen() {
 
     setTimeout(() => {
       setShowCooldown(true)
-      setClickedToday(true)
+      setOnCooldown(true)
       setAnimating(false)
     }, 3000)
   }
@@ -171,7 +191,7 @@ export default function PlayScreen() {
     if (key) {
       localStorage.removeItem(key)
       setStreakCount(1)
-      setClickedToday(false)
+      setOnCooldown(false)
       setShowCooldown(false)
       setTransitioning(false)
       setButtonWidth(BASE_WIDTH)
@@ -182,7 +202,7 @@ export default function PlayScreen() {
   const handleDebugJump = () => {
     saveStreak(7)
     setStreakCount(7)
-    setClickedToday(true)
+    setOnCooldown(true)
     setButtonWidth(BASE_WIDTH + 6 * COOLDOWN_INCREMENT)
     showToast('Debug: Jumped to 7 base streaks', 'success')
   }
@@ -217,16 +237,16 @@ export default function PlayScreen() {
         {!isConnected && (
           <p className="hint-text">Connect your wallet to start your streak</p>
         )}
-        {isConnected && !clickedToday && (
+        {isConnected && !onCooldown && (
           <p className="hint-text">Press today to keep your base streak</p>
         )}
 
         {/* THE BUTTON */}
         <div
-          className={`button ${stretched ? 'stretched' : ''} ${transitioning || clickedToday ? 'transitioning' : ''} ${isConnected ? '' : 'disabled'}`}
+          className={`button ${stretched ? 'stretched' : ''} ${transitioning || onCooldown ? 'transitioning' : ''} ${isConnected ? '' : 'disabled'}`}
           onClick={handleClick}
           style={{
-            cursor: !isConnected || animating || clickedToday ? 'default' : 'pointer',
+            cursor: !isConnected || animating || onCooldown ? 'default' : 'pointer',
             width: stretched ? `${buttonWidth + STRETCH_EXTRA}px` : `${buttonWidth}px`,
             opacity: isConnected ? 1 : 0.5,
           }}
@@ -246,7 +266,7 @@ export default function PlayScreen() {
         </div>
 
         {/* Cooldown countdown */}
-        {(showCooldown || clickedToday) && (
+        {(showCooldown || onCooldown) && (
           <div className="cooldown-text-appearing">
             {countdownText && (
               <span className="countdown-small">{countdownText}</span>

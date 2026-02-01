@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { base } from 'wagmi/chains'
+import { Identity, Name, Avatar } from '@coinbase/onchainkit/identity'
 import PlayScreen from './screens/PlayScreen'
 import StatsScreen from './screens/StatsScreen'
 import AchievementsScreen from './screens/AchievementsScreen'
@@ -9,13 +11,44 @@ function WalletButton() {
   const { address, isConnected } = useAccount()
   const { connect, connectors } = useConnect()
   const { disconnect } = useDisconnect()
-  const [showOptions, setShowOptions] = useState(false)
+  const [showMenu, setShowMenu] = useState(false)
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!showMenu) return
+    const close = () => setShowMenu(false)
+    setTimeout(() => document.addEventListener('click', close), 0)
+    return () => document.removeEventListener('click', close)
+  }, [showMenu])
 
   if (isConnected) {
     return (
-      <button className="wallet-btn connected" onClick={() => disconnect()}>
-        {address.slice(0, 6)}...{address.slice(-4)}
-      </button>
+      <div className="wallet-dropdown-wrap">
+        <button
+          className="wallet-avatar-btn"
+          onClick={(e) => { e.stopPropagation(); setShowMenu(!showMenu) }}
+        >
+          <Identity address={address} chain={base} hasCopyAddressOnClick={false}>
+            <Avatar className="wallet-avatar-img" />
+          </Identity>
+        </button>
+        {showMenu && (
+          <div className="wallet-dropdown" onClick={(e) => e.stopPropagation()}>
+            <div className="wallet-dropdown-profile">
+              <Identity address={address} chain={base} hasCopyAddressOnClick={false}>
+                <Avatar className="wallet-menu-avatar" />
+                <Name className="wallet-menu-name" />
+              </Identity>
+            </div>
+            <button
+              className="wallet-dropdown-item disconnect"
+              onClick={() => { disconnect(); setShowMenu(false) }}
+            >
+              Disconnect
+            </button>
+          </div>
+        )}
+      </div>
     )
   }
 
@@ -33,17 +66,17 @@ function WalletButton() {
         className="wallet-btn"
         onClick={() => connect({ connector: uniqueConnectors[0] })}
       >
-        Connect Wallet
+        Connect
       </button>
     )
   }
 
   return (
     <div className="wallet-dropdown-wrap">
-      <button className="wallet-btn" onClick={() => setShowOptions(!showOptions)}>
-        Connect Wallet
+      <button className="wallet-btn" onClick={() => setShowMenu(!showMenu)}>
+        Connect
       </button>
-      {showOptions && (
+      {showMenu && (
         <div className="wallet-dropdown">
           {uniqueConnectors.map((connector) => (
             <button
@@ -51,7 +84,7 @@ function WalletButton() {
               className="wallet-dropdown-item"
               onClick={() => {
                 connect({ connector })
-                setShowOptions(false)
+                setShowMenu(false)
               }}
             >
               {connector.name}

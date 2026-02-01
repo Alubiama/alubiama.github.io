@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContracts } from 'wagmi'
-import { parseEther } from 'viem'
+import { useAccount, useReadContracts } from 'wagmi'
+import { useSendCalls, useCallsStatus } from 'wagmi/experimental'
+import { encodeFunctionData, parseEther } from 'viem'
 import {
   NFT_MILESTONES,
   ZORA_COIN_ABI,
@@ -18,16 +19,24 @@ export default function NftScreen() {
   const isBase = chainId === 8453
 
   const {
-    writeContract,
-    data: txHash,
+    sendCalls,
+    data: callsId,
     isPending,
-    error: writeError,
+    error: sendError,
     reset,
-  } = useWriteContract()
+  } = useSendCalls()
 
-  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
-    hash: txHash,
+  const { data: callsStatus } = useCallsStatus({
+    id: callsId,
+    query: {
+      enabled: !!callsId,
+      refetchInterval: (query) =>
+        query.state.data?.status === 'CONFIRMED' ? false : 1000,
+    },
   })
+
+  const isConfirming = !!callsId && callsStatus?.status !== 'CONFIRMED'
+  const isSuccess = callsStatus?.status === 'CONFIRMED'
 
   // Load streak
   useEffect(() => {
@@ -72,10 +81,10 @@ export default function NftScreen() {
 
   // Clear error state
   useEffect(() => {
-    if (writeError) {
+    if (sendError) {
       setMintingIndex(null)
     }
-  }, [writeError])
+  }, [sendError])
 
   const hasNft = (index) => {
     if (!balances || !balances[index]) return false
@@ -91,19 +100,16 @@ export default function NftScreen() {
     setMintingIndex(index)
     setMintSuccess(null)
 
-    writeContract({
-      address: nft.contract,
-      abi: ZORA_COIN_ABI,
-      functionName: 'buy',
-      args: [
-        address,
-        BUY_AMOUNT,
-        0n,
-        0n,
-        REFERRER,
-        'Still Basing!',
-      ],
-      value: BUY_AMOUNT,
+    sendCalls({
+      calls: [{
+        to: nft.contract,
+        data: encodeFunctionData({
+          abi: ZORA_COIN_ABI,
+          functionName: 'buy',
+          args: [address, BUY_AMOUNT, 0n, 0n, REFERRER, 'Still Basing!'],
+        }),
+        value: BUY_AMOUNT,
+      }],
     })
   }
 
@@ -139,9 +145,9 @@ export default function NftScreen() {
           Collect Zora Coins for your streak milestones
         </p>
 
-        {writeError && (
+        {sendError && (
           <div className="status-message error">
-            {writeError.shortMessage || writeError.message || 'Transaction failed'}
+            {sendError.shortMessage || sendError.message || 'Transaction failed'}
           </div>
         )}
         {mintSuccess !== null && (

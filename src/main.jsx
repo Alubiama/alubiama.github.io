@@ -5,6 +5,7 @@ import { base } from 'wagmi/chains'
 import { coinbaseWallet, injected } from 'wagmi/connectors'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { OnchainKitProvider } from '@coinbase/onchainkit'
+import { farcasterFrame } from './farcasterConnector'
 import '@coinbase/onchainkit/styles.css'
 import App from './App'
 import './index.css'
@@ -12,6 +13,7 @@ import './index.css'
 const wagmiConfig = createConfig({
   chains: [base],
   connectors: [
+    farcasterFrame(),
     injected(),
     coinbaseWallet({
       appName: 'Still Basing',

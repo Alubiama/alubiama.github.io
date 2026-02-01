@@ -8,7 +8,7 @@ import StatsScreen from './screens/StatsScreen'
 import AchievementsScreen from './screens/AchievementsScreen'
 import NftScreen from './screens/NftScreen'
 
-function WalletButton() {
+function WalletButton({ isInFrame }) {
   const { address, isConnected } = useAccount()
   const { connect, connectors } = useConnect()
   const { disconnect } = useDisconnect()
@@ -41,21 +41,24 @@ function WalletButton() {
                 <Name className="wallet-menu-name" />
               </Identity>
             </div>
-            <button
-              className="wallet-dropdown-item disconnect"
-              onClick={() => { disconnect(); setShowMenu(false) }}
-            >
-              Disconnect
-            </button>
+            {!isInFrame && (
+              <button
+                className="wallet-dropdown-item disconnect"
+                onClick={() => { disconnect(); setShowMenu(false) }}
+              >
+                Disconnect
+              </button>
+            )}
           </div>
         )}
       </div>
     )
   }
 
-  // Filter to unique connector names
+  // Filter to unique connector names, hide frame connector from picker
   const seen = new Set()
   const uniqueConnectors = connectors.filter((c) => {
+    if (c.id === 'farcasterFrame') return false
     if (seen.has(c.name)) return false
     seen.add(c.name)
     return true
@@ -99,6 +102,8 @@ function WalletButton() {
 
 export default function App() {
   const { isConnected } = useAccount()
+  const { connect, connectors } = useConnect()
+  const [isInFrame, setIsInFrame] = useState(false)
 
   const [showOnboarding, setShowOnboarding] = useState(
     () => !localStorage.getItem('onboarding_completed')
@@ -110,9 +115,21 @@ export default function App() {
   )
   const [activeTab, setActiveTab] = useState('play')
 
-  // Signal frame readiness via Farcaster SDK
+  // Signal frame readiness + auto-connect inside frame
   useEffect(() => {
+    let mounted = true
     sdk.actions.ready()
+
+    sdk.isInMiniApp().then((inFrame) => {
+      if (!mounted) return
+      setIsInFrame(inFrame)
+      if (inFrame) {
+        const fc = connectors.find(c => c.id === 'farcasterFrame')
+        if (fc) connect({ connector: fc })
+      }
+    }).catch(() => {})
+
+    return () => { mounted = false }
   }, [])
 
   // Dark mode persistence
@@ -201,7 +218,7 @@ export default function App() {
         >
           {darkMode ? '\u2600\uFE0F' : '\u{1F319}'}
         </button>
-        <WalletButton />
+        <WalletButton isInFrame={isInFrame} />
       </div>
 
       {/* Active Screen */}

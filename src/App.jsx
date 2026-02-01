@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { base } from 'wagmi/chains'
 import { Identity, Name, Avatar } from '@coinbase/onchainkit/identity'
+import sdk from '@farcaster/frame-sdk'
 import PlayScreen from './screens/PlayScreen'
 import StatsScreen from './screens/StatsScreen'
 import AchievementsScreen from './screens/AchievementsScreen'
@@ -109,15 +110,9 @@ export default function App() {
   )
   const [activeTab, setActiveTab] = useState('play')
 
-  // Signal MiniKit frame readiness (if inside a frame)
+  // Signal frame readiness via Farcaster SDK
   useEffect(() => {
-    try {
-      if (window !== window.parent) {
-        window.parent.postMessage({ type: 'frame_ready' }, '*')
-      }
-    } catch (e) {
-      // not in a frame, ignore
-    }
+    sdk.actions.ready()
   }, [])
 
   // Dark mode persistence

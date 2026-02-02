@@ -1,5 +1,5 @@
 import { createConnector } from 'wagmi'
-import { sdk } from '@farcaster/miniapp-sdk'
+import sdk from '@farcaster/frame-sdk'
 
 export function farcasterFrame() {
   return createConnector((config) => ({
@@ -29,7 +29,7 @@ export function farcasterFrame() {
     },
 
     async getProvider() {
-      return sdk.wallet.getEthereumProvider()
+      return sdk.wallet.ethProvider
     },
 
     async isAuthorized() {

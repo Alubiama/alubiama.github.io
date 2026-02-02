@@ -1,5 +1,5 @@
 import { createConnector } from 'wagmi'
-import sdk from '@farcaster/miniapp-sdk'
+import { sdk } from '@farcaster/miniapp-sdk'
 
 export function farcasterFrame() {
   return createConnector((config) => ({

@@ -6,7 +6,7 @@
   },
     "name": "Alubiama",
   "description": "Base mini app",
-  "imageUrl": "https://alubiama.github.io/og-1200x630.png",
+  "imageUrl": "https://alubiama.github.io/icon-1024.png",
   "frame": {
     "version": "next",
     "name": "Still Basing",
@@ -39,7 +39,7 @@
     "description": "Press once a day to grow your streak. Earn achievements at milestones and collect unique Zora Coins.",
     "homeUrl": "https://alubiama.github.io/",
     "iconUrl": "https://alubiama.github.io/icon-1024.png",
-    "imageUrl": "https://alubiama.github.io/og-1200x630.png",
+    "imageUrl": "https://alubiama.github.io/icon-1024.png",
     "heroImageUrl": "https://alubiama.github.io/hero-1200x630.png",
     "splashImageUrl": "https://alubiama.github.io/splash-200.png",
     "splashBackgroundColor": "#0000FF",

@@ -4,8 +4,11 @@
     "payload": "eyJkb21haW4iOiJhbHViaWFtYS5naXRodWIuaW8ifQ",
     "signature": "pucUxoNJn5DxfzA2GbkuFf84UsSnY+4uFQDaeqP8ME07KWrTGh+2PcouTOEX+kpoe0afKYs3FoL+8tUY9OUVlRs="
   },
+    "name": "Alubiama",
+  "description": "Base mini app",
+  "imageUrl": "https://alubiama.github.io/og-1200x630.png",
   "frame": {
-    "version": "1",
+    "version": "next",
     "name": "Still Basing",
     "subtitle": "Daily streak tracker on Base",
     "tagline": "Press daily. Earn NFTs.",

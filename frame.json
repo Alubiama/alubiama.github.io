@@ -1,1 +1,15 @@
+{
+  "version": "next",
+  "imageUrl": "https://alubiama.github.io/og-1200x630.png",
+  "buttons": [
+    {
+      "label": "Play Now",
+      "action": "launch_frame",
+      "name": "Still Basing",
+      "url": "https://alubiama.github.io/app",
+      "splashImageUrl": "https://alubiama.github.io/splash-200.png",
+      "splashBackgroundColor": "#0000FF"
+    }
+  ]
+}
 

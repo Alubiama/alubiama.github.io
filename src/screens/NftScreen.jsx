@@ -10,6 +10,7 @@ import {
 
 const REFERRER = '0x47550e121654FED9Bc17ed2f684E902a4B1fF102'
 const BUY_AMOUNT = parseEther('0.001')
+const PAYMASTER_URL = import.meta.env.VITE_PAYMASTER_URL
 
 export default function NftScreen() {
   const { address, isConnected, chainId } = useAccount()
@@ -110,6 +111,11 @@ export default function NftScreen() {
         }),
         value: BUY_AMOUNT,
       }],
+      capabilities: PAYMASTER_URL ? {
+        paymasterService: {
+          url: PAYMASTER_URL,
+        },
+      } : undefined,
     })
   }
 
@@ -224,7 +230,7 @@ export default function NftScreen() {
                     >
                       {isMinting
                         ? (isConfirming ? 'Confirming...' : 'Minting...')
-                        : 'Mint (0.001 ETH)'}
+                        : PAYMASTER_URL ? 'Mint (0.001 ETH, gas free)' : 'Mint (0.001 ETH)'}
                     </button>
                   )}
                   {isUnlocked && owned && (

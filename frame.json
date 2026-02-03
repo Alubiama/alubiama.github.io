@@ -4,9 +4,9 @@
   "buttons": [
     {
       "label": "Play Now",
-      "action": "launch_frame",
+      "action": "launch_miniapp",
       "name": "Still Basing",
-      "url": "https://alubiama.github.io/app",
+      "url": "https://alubiama.github.io/",
       "splashImageUrl": "https://alubiama.github.io/splash-200.png",
       "splashBackgroundColor": "#0000FF"
     }

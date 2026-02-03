@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import {
-  STREAK_KEY,
+  STREAK_KEY_PREFIX,
   getBasingLevel,
   getUnlockedMilestones,
   getNextMilestone,
@@ -14,7 +14,13 @@ export default function StatsScreen() {
   const [longestStreak, setLongestStreak] = useState(0)
 
   useEffect(() => {
-    const raw = localStorage.getItem(STREAK_KEY)
+    if (!address) {
+      setStreakCount(0)
+      setLongestStreak(0)
+      return
+    }
+    const key = STREAK_KEY_PREFIX + address.toLowerCase()
+    const raw = localStorage.getItem(key)
     if (raw) {
       try {
         const data = JSON.parse(raw)
@@ -32,7 +38,7 @@ export default function StatsScreen() {
         console.error('Failed to parse streak data:', err)
       }
     }
-  }, [])
+  }, [address])
 
   const unlocked = getUnlockedMilestones(streakCount)
   const next = getNextMilestone(streakCount)

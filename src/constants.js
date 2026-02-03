@@ -57,8 +57,6 @@ export const ZORA_COIN_ABI = [
 
 // Streak storage key prefix (wallet-tied)
 export const STREAK_KEY_PREFIX = "stillbasing_streak_";
-// Legacy streak key (non-wallet)
-export const STREAK_KEY = "stillbasing_streak";
 
 // Debug whitelist
 export const DEBUG_WHITELIST = ["0x47550e121654FED9Bc17ed2f684E902a4B1fF102"];
@@ -67,19 +65,6 @@ export const DEBUG_WHITELIST = ["0x47550e121654FED9Bc17ed2f684E902a4B1fF102"];
 export function getBasingLevel(count) {
   const n = Math.max(1, count);
   return "Still Ba" + "s".repeat(n) + "ing";
-}
-
-// Get today's date string
-export function getTodayString() {
-  return new Date().toISOString().split("T")[0];
-}
-
-// Day difference between two date strings
-export function dayDiff(dateStr1, dateStr2) {
-  const d1 = new Date(dateStr1);
-  const d2 = new Date(dateStr2);
-  const diff = Math.abs(d2 - d1);
-  return Math.floor(diff / (1000 * 60 * 60 * 24));
 }
 
 // Get next milestone

@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback, useRef, Fragment } from 'react'
 import { useAccount } from 'wagmi'
 import {
   STREAK_KEY_PREFIX,
-  STREAK_KEY,
   DEBUG_WHITELIST,
   getMilestoneByDay,
   getNextMilestone,
@@ -124,7 +123,6 @@ export default function PlayScreen() {
         const data = { lastPressTime: now, streakCount: newCount }
         lastPressRef.current = now
         localStorage.setItem(key, JSON.stringify(data))
-        localStorage.setItem(STREAK_KEY, JSON.stringify(data))
         const longest = parseInt(localStorage.getItem('stillbasing_longest') || '0', 10)
         if (newCount > longest) {
           localStorage.setItem('stillbasing_longest', newCount.toString())

@@ -24,16 +24,5 @@
   ],
   "scope": "/",
   "dir": "ltr",
-  "lang": "en-US",
-  "accountAssociation": {
-    "type": "both"
-  },
-  "frame": {
-    "version": "1",
-    "name": "Still Basing",
-    "iconUrl": "https://alubiama.github.io/icon-512.png",
-    "homeUrl": "https://alubiama.github.io/",
-    "splashImageUrl": "https://alubiama.github.io/splash-200.png",
-    "splashBackgroundColor": "#0000FF"
-  }
+  "lang": "en-US"
 }

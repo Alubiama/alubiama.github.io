@@ -269,6 +269,7 @@ export default function PlayScreen() {
             {countdownText && (
               <span className="countdown-small">{countdownText}</span>
             )}
+            <p className="hint-text">Come back tomorrow.</p>
           </div>
         )}
 

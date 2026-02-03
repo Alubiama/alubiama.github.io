@@ -4,6 +4,16 @@
     "payload": "eyJkb21haW4iOiJhbHViaWFtYS5naXRodWIuaW8ifQ",
     "signature": "pucUxoNJn5DxfzA2GbkuFf84UsSnY+4uFQDaeqP8ME07KWrTGh+2PcouTOEX+kpoe0afKYs3FoL+8tUY9OUVlRs="
   },
+  "frame": {
+    "version": "1",
+    "name": "Still Basing",
+    "iconUrl": "https://alubiama.github.io/icon-1024.png",
+    "homeUrl": "https://alubiama.github.io/",
+    "imageUrl": "https://alubiama.github.io/embed-1200x800.png",
+    "splashImageUrl": "https://alubiama.github.io/splash-200.png",
+    "splashBackgroundColor": "#0000FF",
+    "buttonTitle": "Play Now"
+  },
   "miniapp": {
     "version": "1",
     "name": "Still Basing",

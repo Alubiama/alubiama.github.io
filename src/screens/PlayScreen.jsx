@@ -1,51 +1,48 @@
 import { useState, useEffect, useCallback, useRef, Fragment } from 'react'
-import { useAccount } from 'wagmi'
 import {
-  STREAK_KEY_PREFIX,
   DEBUG_WHITELIST,
   getMilestoneByDay,
   getNextMilestone,
 } from '../constants'
+import { useStreakFull } from '../useStreak'
 
 const COOLDOWN_INCREMENT = 22
 const BASE_WIDTH = 240
 const STRETCH_EXTRA = 160
-const COOLDOWN_MS = 24 * 60 * 60 * 1000   // 24 hours
-const STREAK_BREAK_MS = 48 * 60 * 60 * 1000 // 48 hours — streak resets
 
 export default function PlayScreen() {
-  const { isConnected, address } = useAccount()
+  const {
+    streakCount,
+    setStreakCount,
+    onCooldown,
+    setOnCooldown,
+    isConnected,
+    address,
+    getTimeUntilReset,
+    getStorageKey,
+    saveStreak,
+  } = useStreakFull()
 
   const [stretched, setStretched] = useState(false)
   const [fading, setFading] = useState(false)
   const [animating, setAnimating] = useState(false)
-  const [streakCount, setStreakCount] = useState(1)
   const [buttonWidth, setButtonWidth] = useState(BASE_WIDTH)
   const [showExtraS, setShowExtraS] = useState(false)
-  const [onCooldown, setOnCooldown] = useState(false)
   const [transitioning, setTransitioning] = useState(false)
   const [showCooldown, setShowCooldown] = useState(false)
   const [countdownText, setCountdownText] = useState('')
   const [toast, setToast] = useState(null)
-  const lastPressRef = useRef(0)
+  const toastTimerRef = useRef(null)
 
   const isDebug = address && DEBUG_WHITELIST.map(a => a.toLowerCase()).includes(address.toLowerCase())
 
-  const getStorageKey = useCallback(() => {
-    if (!address) return null
-    return STREAK_KEY_PREFIX + address.toLowerCase()
-  }, [address])
-
-  const getTimeUntilReset = useCallback(() => {
-    const now = Date.now()
-    const unlockAt = lastPressRef.current + COOLDOWN_MS
-    const diff = unlockAt - now
-    if (diff <= 0) return null
-    const h = Math.floor(diff / (1000 * 60 * 60))
-    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-    const s = Math.floor((diff % (1000 * 60)) / 1000)
-    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
-  }, [])
+  // Sync button width with streak count and cooldown state
+  useEffect(() => {
+    setButtonWidth(BASE_WIDTH + (streakCount - 1) * COOLDOWN_INCREMENT)
+    if (onCooldown) {
+      setShowCooldown(true)
+    }
+  }, [streakCount, onCooldown])
 
   // Countdown timer for cooldown display
   useEffect(() => {
@@ -65,78 +62,22 @@ export default function PlayScreen() {
       const interval = setInterval(tick, 1000)
       return () => clearInterval(interval)
     }
-  }, [onCooldown, showCooldown, getTimeUntilReset])
-
-  // Load streak on mount / address change
-  useEffect(() => {
-    if (address) {
-      loadStreak()
-    } else {
-      setStreakCount(1)
-      setOnCooldown(false)
-      setButtonWidth(BASE_WIDTH)
-    }
-  }, [address])
-
-  const loadStreak = () => {
-    const key = getStorageKey()
-    if (key) {
-      try {
-        const raw = localStorage.getItem(key)
-        if (raw) {
-          const data = JSON.parse(raw)
-          const now = Date.now()
-          const lastPress = data.lastPressTime || 0
-          const elapsed = now - lastPress
-
-          lastPressRef.current = lastPress
-
-          if (lastPress && elapsed < COOLDOWN_MS) {
-            // Still on cooldown
-            setStreakCount(data.streakCount)
-            setOnCooldown(true)
-            setShowCooldown(true)
-            setButtonWidth(BASE_WIDTH + (data.streakCount - 1) * COOLDOWN_INCREMENT)
-          } else if (lastPress && elapsed < STREAK_BREAK_MS) {
-            // Cooldown passed, streak alive — can press again
-            setStreakCount(data.streakCount)
-            setOnCooldown(false)
-            setButtonWidth(BASE_WIDTH + (data.streakCount - 1) * COOLDOWN_INCREMENT)
-          } else {
-            // Streak broken (>48h or no data)
-            setStreakCount(1)
-            setOnCooldown(false)
-            setButtonWidth(BASE_WIDTH)
-          }
-        }
-      } catch (err) {
-        console.error('Failed to load streak:', err)
-      }
-    }
-  }
-
-  const saveStreak = (newCount) => {
-    const key = getStorageKey()
-    if (key) {
-      try {
-        const now = Date.now()
-        const data = { lastPressTime: now, streakCount: newCount }
-        lastPressRef.current = now
-        localStorage.setItem(key, JSON.stringify(data))
-        const longest = parseInt(localStorage.getItem('stillbasing_longest') || '0', 10)
-        if (newCount > longest) {
-          localStorage.setItem('stillbasing_longest', newCount.toString())
-        }
-      } catch (err) {
-        console.error('Failed to save streak:', err)
-        showToast('Failed to save progress', 'error')
-      }
-    }
-  }
+  }, [onCooldown, showCooldown, getTimeUntilReset, setOnCooldown])
 
   const showToast = useCallback((message, type = 'success') => {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
     setToast({ message, type })
-    setTimeout(() => setToast(null), 3000)
+    toastTimerRef.current = setTimeout(() => {
+      setToast(null)
+      toastTimerRef.current = null
+    }, 3000)
+  }, [])
+
+  // Clean up toast timer on unmount
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
+    }
   }, [])
 
   const handleClick = async () => {
@@ -147,7 +88,11 @@ export default function PlayScreen() {
     setShowExtraS(true)
 
     const newCount = streakCount + 1
-    saveStreak(newCount)
+    try {
+      saveStreak(newCount)
+    } catch {
+      showToast('Failed to save progress', 'error')
+    }
 
     const milestone = getMilestoneByDay(newCount)
     if (milestone) {

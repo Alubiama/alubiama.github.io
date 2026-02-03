@@ -1,32 +1,12 @@
-import { useState, useEffect } from 'react'
-import { useAccount } from 'wagmi'
 import {
-  STREAK_KEY_PREFIX,
   ACHIEVEMENT_MILESTONES,
   getUnlockedMilestones,
   getNextMilestone,
 } from '../constants'
+import { useStreakData } from '../useStreak'
 
 export default function AchievementsScreen() {
-  const { address } = useAccount()
-  const [streakCount, setStreakCount] = useState(0)
-
-  useEffect(() => {
-    if (!address) {
-      setStreakCount(0)
-      return
-    }
-    const key = STREAK_KEY_PREFIX + address.toLowerCase()
-    const raw = localStorage.getItem(key)
-    if (raw) {
-      try {
-        const data = JSON.parse(raw)
-        setStreakCount(data.streakCount || 0)
-      } catch (err) {
-        console.error('Failed to parse streak data:', err)
-      }
-    }
-  }, [address])
+  const { streakCount } = useStreakData()
 
   const unlocked = getUnlockedMilestones(streakCount)
   const next = getNextMilestone(streakCount)

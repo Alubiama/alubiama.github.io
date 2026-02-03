@@ -130,7 +130,7 @@ export default function App() {
     }).catch(() => {})
 
     return () => { mounted = false }
-  }, [])
+  }, [connectors, connect])
 
   // Dark mode persistence
   useEffect(() => {

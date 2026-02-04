@@ -204,6 +204,13 @@ export default function PlayScreen() {
           <p className="hint-text">Press today to keep your base streak</p>
         )}
 
+        {/* Countdown timer above button */}
+        {(showCooldown || onCooldown) && countdownText && (
+          <div className="countdown-above">
+            <span className="countdown-small">{countdownText}</span>
+          </div>
+        )}
+
         {/* THE BUTTON */}
         <div
           className={`button ${stretched ? 'stretched' : ''} ${transitioning || onCooldown ? 'transitioning' : ''} ${isConnected ? '' : 'disabled'}`}
@@ -228,13 +235,10 @@ export default function PlayScreen() {
           </div>
         </div>
 
-        {/* Cooldown countdown */}
+        {/* Below button: come back + share + notifications */}
         {(showCooldown || onCooldown) && (
-          <div className="cooldown-text-appearing">
-            {countdownText && (
-              <span className="countdown-small">{countdownText}</span>
-            )}
-            <p className="hint-text">Come back tomorrow.</p>
+          <div className="cooldown-below">
+            <p className="cooldown-hint">Come back tomorrow.</p>
             <button
               className="share-button"
               onClick={() => {

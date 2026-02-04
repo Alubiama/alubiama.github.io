@@ -637,19 +637,24 @@ body.dark-mode .cooldown-message h2 { color: #5c7cfa; }
 body.dark-mode .cooldown-message p { color: #aaa; }
 .cooldown-timer { font-size: 48px; font-weight: 700; font-family: "SF Mono", Monaco, Inconsolata, "Roboto Mono", monospace; color: #00f; margin-top: 16px; letter-spacing: 2px; }
 body.dark-mode .cooldown-timer { color: #5c7cfa; }
-.cooldown-text-appearing { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%) translateY(40px); display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; color: #00f; animation: cooldownTextFadeIn .6s cubic-bezier(.34,1.56,.64,1) forwards; opacity: 0; }
-@keyframes cooldownTextFadeIn { 0% { opacity: 0; transform: translate(-50%, -50%) translateY(60px); } to { opacity: 1; transform: translate(-50%, -50%) translateY(40px); } }
-.cooldown-emoji-small { font-size: 32px; }
-.countdown-small { font-size: 28px; font-family: "SF Mono", Monaco, Inconsolata, "Roboto Mono", monospace; letter-spacing: 2px; margin-top: 4px; }
-body.dark-mode .cooldown-text-appearing { color: #5c7cfa; }
+/* Timer ABOVE button */
+.countdown-above { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%) translateY(-60px); display: flex; align-items: center; justify-content: center; color: #00f; animation: cooldownFadeIn .6s ease forwards; opacity: 0; }
+body.dark-mode .countdown-above { color: #5c7cfa; }
+.countdown-small { font-size: 28px; font-weight: 700; font-family: "SF Mono", Monaco, Inconsolata, "Roboto Mono", monospace; letter-spacing: 2px; }
+@keyframes cooldownFadeIn { 0% { opacity: 0; } to { opacity: 1; } }
+
+/* Content BELOW button */
+.cooldown-below { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%) translateY(60px); display: flex; flex-direction: column; align-items: center; gap: 12px; animation: cooldownFadeIn .6s ease forwards; opacity: 0; }
+.cooldown-hint { color: #666; font-size: 14px; font-weight: 500; margin: 0; }
+body.dark-mode .cooldown-hint { color: #aaa; }
 
 /* ==================== SHARE BUTTON ==================== */
-.share-button { margin-top: 12px; padding: 10px 24px; border: 2px solid #00f; border-radius: 24px; background: transparent; color: #00f; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s ease; }
+.share-button { padding: 10px 24px; border: 2px solid #00f; border-radius: 24px; background: transparent; color: #00f; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s ease; }
 .share-button:hover { background: #00f; color: #fff; }
 body.dark-mode .share-button { border-color: #5c7cfa; color: #5c7cfa; }
 body.dark-mode .share-button:hover { background: #5c7cfa; color: #fff; }
 
-.notif-button { margin-top: 8px; padding: 8px 20px; border: 1px solid #999; border-radius: 24px; background: transparent; color: #666; font-size: 12px; font-weight: 500; cursor: pointer; transition: all .2s ease; }
+.notif-button { padding: 8px 20px; border: 1px solid #999; border-radius: 24px; background: transparent; color: #666; font-size: 12px; font-weight: 500; cursor: pointer; transition: all .2s ease; }
 .notif-button:hover { border-color: #00f; color: #00f; }
 body.dark-mode .notif-button { border-color: #555; color: #aaa; }
 body.dark-mode .notif-button:hover { border-color: #5c7cfa; color: #5c7cfa; }
@@ -684,7 +689,6 @@ body.dark-mode .streak-label { color: #aaa; }
 /* ==================== HINT TEXT ==================== */
 .hint-text { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); color: #666; font-size: 14px; text-align: center; }
 body.dark-mode .hint-text { color: #aaa; }
-.cooldown-text-appearing .hint-text { position: static; transform: none; margin-top: 4px; font-size: 13px; }
 
 /* ==================== TOAST ==================== */
 .toast { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); padding: 16px 24px; border-radius: 12px; font-weight: 600; font-size: 16px; z-index: 1000; animation: toastSlideIn .3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }

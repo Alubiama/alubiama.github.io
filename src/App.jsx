@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 import { base } from 'wagmi/chains'
 import { Identity, Name, Avatar } from '@coinbase/onchainkit/identity'
 import { sdk } from '@farcaster/miniapp-sdk'
 import PlayScreen from './screens/PlayScreen'
-import StatsScreen from './screens/StatsScreen'
-import AchievementsScreen from './screens/AchievementsScreen'
-import NftScreen from './screens/NftScreen'
+
+const StatsScreen = lazy(() => import('./screens/StatsScreen'))
+const AchievementsScreen = lazy(() => import('./screens/AchievementsScreen'))
+const NftScreen = lazy(() => import('./screens/NftScreen'))
 
 function WalletButton({ isInFrame }) {
   const { address, isConnected } = useAccount()
@@ -222,7 +223,9 @@ export default function App() {
       </div>
 
       {/* Active Screen */}
-      {renderScreen()}
+      <Suspense fallback={<div className="screen-container"><div className="loading-spinner" /></div>}>
+        {renderScreen()}
+      </Suspense>
 
       {/* Bottom Navigation */}
       <nav className="bottom-nav">

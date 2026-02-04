@@ -41,8 +41,11 @@
 - [ ] Test gasless NFT minting
 
 ## Priority: Features (ranked by grant impact)
-- [ ] Notifications: daily reminder via Farcaster Mini App SDK (HIGH - retention)
-- [ ] Social sharing: cast composer with streak share card (HIGH - viral growth)
+- [x] Social sharing: "Share your streak" button → Farcaster cast composer
+- [x] Notifications: "Enable daily reminders" button → sdk.actions.addMiniApp()
+- [x] Notification worker template (notification-worker/) — deploy to Cloudflare
+- [x] Lazy-load screens (Stats, Achievements, NFT) for faster initial load
+- [ ] Deploy notification worker + add webhookUrl to farcaster.json (user does manually)
 - [ ] On-chain streaks: smart contract instead of localStorage (HIGH - on-chain activity)
 - [ ] Leaderboard: top streaks, competitive element (MEDIUM - engagement)
 - [ ] Daily Base Challenge: micro-tasks for learning Base (LOW - save for later)

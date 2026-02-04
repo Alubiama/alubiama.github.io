@@ -1,14 +1,17 @@
 import { useState, useEffect, useCallback, useRef, Fragment } from 'react'
+import { sdk } from '@farcaster/miniapp-sdk'
 import {
   DEBUG_WHITELIST,
   getMilestoneByDay,
   getNextMilestone,
+  getBasingLevel,
 } from '../constants'
 import { useStreakFull } from '../useStreak'
 
 const COOLDOWN_INCREMENT = 22
 const BASE_WIDTH = 240
 const STRETCH_EXTRA = 160
+const NOTIF_KEY = 'stillbasing_notifications'
 
 export default function PlayScreen() {
   const {
@@ -22,6 +25,10 @@ export default function PlayScreen() {
     getStorageKey,
     saveStreak,
   } = useStreakFull()
+
+  const [notifEnabled, setNotifEnabled] = useState(
+    () => !!localStorage.getItem(NOTIF_KEY)
+  )
 
   const [stretched, setStretched] = useState(false)
   const [fading, setFading] = useState(false)
@@ -150,6 +157,19 @@ export default function PlayScreen() {
     showToast('Debug: Jumped to 7 base streaks', 'success')
   }
 
+  const handleEnableNotifications = async () => {
+    try {
+      const result = await sdk.actions.addMiniApp()
+      if (result?.notificationDetails) {
+        localStorage.setItem(NOTIF_KEY, JSON.stringify(result.notificationDetails))
+        setNotifEnabled(true)
+        showToast('Daily reminders enabled!', 'success')
+      }
+    } catch {
+      showToast('Could not enable reminders', 'error')
+    }
+  }
+
   const nextMilestone = getNextMilestone(streakCount)
 
   return (
@@ -215,6 +235,26 @@ export default function PlayScreen() {
               <span className="countdown-small">{countdownText}</span>
             )}
             <p className="hint-text">Come back tomorrow.</p>
+            <button
+              className="share-button"
+              onClick={() => {
+                const level = getBasingLevel(streakCount)
+                sdk.actions.composeCast({
+                  text: `${level}\n\nDay ${streakCount} streak on Still Basing`,
+                  embeds: ['https://alubiama.github.io/'],
+                }).catch(() => {})
+              }}
+            >
+              Share your streak
+            </button>
+            {!notifEnabled && (
+              <button
+                className="notif-button"
+                onClick={handleEnableNotifications}
+              >
+                Enable daily reminders
+              </button>
+            )}
           </div>
         )}
 

@@ -684,6 +684,7 @@ body.dark-mode .streak-label { color: #aaa; }
 /* ==================== HINT TEXT ==================== */
 .hint-text { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); color: #666; font-size: 14px; text-align: center; }
 body.dark-mode .hint-text { color: #aaa; }
+.cooldown-text-appearing .hint-text { position: static; transform: none; margin-top: 4px; font-size: 13px; }
 
 /* ==================== TOAST ==================== */
 .toast { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); padding: 16px 24px; border-radius: 12px; font-weight: 600; font-size: 16px; z-index: 1000; animation: toastSlideIn .3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }

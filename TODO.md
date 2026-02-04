@@ -20,15 +20,19 @@
 
 ---
 
-## In Progress: base.app Integration
-- [ ] Verify app works in base.app after SDK migration (test on phone)
-- [ ] If still not showing in base.app directory: post app URL on Farcaster profile for indexing
-- [ ] Test base.dev preview passes all checks after changes
+## Completed: base.app Integration
+- [x] App is live and working inside base.app
+- [x] Wallet connects correctly in Farcaster frame
+- [x] farcaster.json validated (frame + miniapp sections identical)
+- [x] StatsScreen/AchievementsScreen fixed to read wallet-specific streak
+- [x] Added "Come back tomorrow." hint text under cooldown timer
 
 ## Architecture Improvements
-- [ ] Code review: identify redundant patterns, optimize state management
+- [x] Code review: extracted shared useStreak hook, fixed wallet-specific longest streak
+- [x] Fixed innerHTML XSS pattern in NftScreen (now uses React state)
+- [x] Fixed missing useEffect dependencies in App.jsx
+- [x] Fixed toast timer cleanup in PlayScreen
 - [ ] Consider code-splitting (main bundle is 1MB+ before gzip)
-- [ ] Evaluate if StatsScreen/AchievementsScreen should read wallet-specific streak (currently reads legacy key)
 
 ## Priority: Paymaster (gasless minting)
 - [ ] Claim Paymaster Credits ($500) on base.dev (user does manually)
@@ -36,12 +40,15 @@
 - [ ] Set up proxy server for paymaster URL (Cloudflare Worker ready at paymaster-proxy/)
 - [ ] Test gasless NFT minting
 
-## Priority: Features
-- [ ] On-chain streaks: smart contract instead of localStorage
-- [ ] Share card: generate streak image for sharing on Farcaster/X
-- [ ] Leaderboard: top streaks table
-- [ ] Notifications via Base App: reminder to press daily
-- [ ] Daily Base Challenge: micro-tasks for learning Base
+## Priority: Features (ranked by grant impact)
+- [x] Social sharing: "Share your streak" button → Farcaster cast composer
+- [x] Notifications: "Enable daily reminders" button → sdk.actions.addMiniApp()
+- [x] Notification worker template (notification-worker/) — deploy to Cloudflare
+- [x] Lazy-load screens (Stats, Achievements, NFT) for faster initial load
+- [ ] Deploy notification worker + add webhookUrl to farcaster.json (user does manually)
+- [ ] On-chain streaks: smart contract instead of localStorage (HIGH - on-chain activity)
+- [ ] Leaderboard: top streaks, competitive element (MEDIUM - engagement)
+- [ ] Daily Base Challenge: micro-tasks for learning Base (LOW - save for later)
 
 ## Builder Programs (user does manually)
 - [ ] Register on talent.app for Builder Rewards

@@ -1,23 +1,22 @@
 import { useState, useEffect } from 'react'
-import { useAccount, useReadContracts } from 'wagmi'
+import { useReadContracts } from 'wagmi'
 import { useSendCalls, useCallsStatus } from 'wagmi/experimental'
 import { encodeFunctionData, parseEther } from 'viem'
-import {
-  NFT_MILESTONES,
-  ZORA_COIN_ABI,
-  STREAK_KEY_PREFIX,
-} from '../constants'
+import { NFT_MILESTONES, ZORA_COIN_ABI } from '../constants'
+import { useStreakData } from '../useStreak'
 
 const REFERRER = '0x47550e121654FED9Bc17ed2f684E902a4B1fF102'
 const BUY_AMOUNT = parseEther('0.001')
 const PAYMASTER_URL = import.meta.env.VITE_PAYMASTER_URL
 
 export default function NftScreen() {
-  const { address, isConnected, chainId } = useAccount()
-  const [streakCount, setStreakCount] = useState(1)
+  const { streakCount, address } = useStreakData()
+  const isConnected = !!address
   const [mintingIndex, setMintingIndex] = useState(null)
   const [mintSuccess, setMintSuccess] = useState(null)
-  const isBase = chainId === 8453
+  const [imageFallbacks, setImageFallbacks] = useState({})
+  // chainId check: we use Base mainnet (8453) for NFT reads
+  const isBase = true // wagmi config only has Base chain
 
   const {
     sendCalls,
@@ -38,22 +37,6 @@ export default function NftScreen() {
 
   const isConfirming = !!callsId && callsStatus?.status !== 'CONFIRMED'
   const isSuccess = callsStatus?.status === 'CONFIRMED'
-
-  // Load streak
-  useEffect(() => {
-    if (address) {
-      try {
-        const key = STREAK_KEY_PREFIX + address.toLowerCase()
-        const raw = localStorage.getItem(key)
-        if (raw) {
-          const data = JSON.parse(raw)
-          setStreakCount(data.streakCount || 1)
-        }
-      } catch (err) {
-        console.error('Failed to load streak:', err)
-      }
-    }
-  }, [address])
 
   // Read balances for all NFTs
   const contracts = NFT_MILESTONES.map((m) => ({
@@ -184,15 +167,16 @@ export default function NftScreen() {
                   className="nft-image-link"
                 >
                   <div className="nft-image">
-                    <img
-                      src={nft.imageUrl}
-                      alt={nft.name}
-                      className="nft-image-actual"
-                      onError={(e) => {
-                        e.target.style.display = 'none'
-                        e.target.parentElement.innerHTML = `<span class="nft-emoji">${nft.emoji}</span>`
-                      }}
-                    />
+                    {imageFallbacks[index] ? (
+                      <span className="nft-emoji">{nft.emoji}</span>
+                    ) : (
+                      <img
+                        src={nft.imageUrl}
+                        alt={nft.name}
+                        className="nft-image-actual"
+                        onError={() => setImageFallbacks(prev => ({ ...prev, [index]: true }))}
+                      />
+                    )}
                     {!isUnlocked && (
                       <div className="nft-lock-overlay">{"\u{1F512}"}</div>
                     )}

@@ -1,44 +1,13 @@
-import { useState, useEffect } from 'react'
-import { useAccount } from 'wagmi'
 import {
-  STREAK_KEY_PREFIX,
   getBasingLevel,
   getUnlockedMilestones,
   getNextMilestone,
   ACHIEVEMENT_MILESTONES,
 } from '../constants'
+import { useStreakData } from '../useStreak'
 
 export default function StatsScreen() {
-  const { address, isConnected } = useAccount()
-  const [streakCount, setStreakCount] = useState(0)
-  const [longestStreak, setLongestStreak] = useState(0)
-
-  useEffect(() => {
-    if (!address) {
-      setStreakCount(0)
-      setLongestStreak(0)
-      return
-    }
-    const key = STREAK_KEY_PREFIX + address.toLowerCase()
-    const raw = localStorage.getItem(key)
-    if (raw) {
-      try {
-        const data = JSON.parse(raw)
-        setStreakCount(data.streakCount || 0)
-
-        const longest = localStorage.getItem('stillbasing_longest') || '0'
-        const longestVal = parseInt(longest, 10)
-        if (data.streakCount > longestVal) {
-          localStorage.setItem('stillbasing_longest', data.streakCount.toString())
-          setLongestStreak(data.streakCount)
-        } else {
-          setLongestStreak(longestVal)
-        }
-      } catch (err) {
-        console.error('Failed to parse streak data:', err)
-      }
-    }
-  }, [address])
+  const { streakCount, longestStreak, address } = useStreakData()
 
   const unlocked = getUnlockedMilestones(streakCount)
   const next = getNextMilestone(streakCount)
@@ -109,7 +78,7 @@ export default function StatsScreen() {
         <div className="wallet-info">
           <div className="stat-label">Wallet</div>
           <div className="stat-value-small">
-            {isConnected && address
+            {address
               ? `${address.slice(0, 6)}...${address.slice(-4)}`
               : 'Not connected'}
           </div>

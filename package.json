@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "compile": "hardhat compile",
+    "deploy:testnet": "hardhat run scripts/deploy.js --network baseSepolia",
+    "deploy:mainnet": "hardhat run scripts/deploy.js --network base"
   },
   "dependencies": {
     "@coinbase/onchainkit": "^0.38.0",
@@ -18,7 +21,9 @@
     "wagmi": "^2.16.0"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "hardhat": "^2.19.0",
     "vite": "^6.0.5"
   }
 }

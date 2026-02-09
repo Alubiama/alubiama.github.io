@@ -1,3 +1,48 @@
+// StreakTracker contract (deploy and update this address)
+export const STREAK_CONTRACT = "0x0000000000000000000000000000000000000000"; // TODO: Update after deployment
+
+// StreakTracker ABI
+export const STREAK_TRACKER_ABI = [
+  {
+    inputs: [],
+    name: "checkIn",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ name: "user", type: "address" }],
+    name: "getStatus",
+    outputs: [
+      { name: "currentStreak", type: "uint32" },
+      { name: "longestStreak", type: "uint32" },
+      { name: "lastCheckIn", type: "uint40" },
+      { name: "totalCheckIns", type: "uint32" },
+      { name: "canCheckIn", type: "bool" },
+      { name: "timeUntilCheckIn", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ name: "addresses", type: "address[]" }],
+    name: "getStreaks",
+    outputs: [{ name: "streaks", type: "uint32[]" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, name: "user", type: "address" },
+      { indexed: false, name: "newStreak", type: "uint32" },
+      { indexed: false, name: "timestamp", type: "uint40" },
+    ],
+    name: "CheckIn",
+    type: "event",
+  },
+];
+
 // NFT contract addresses on Base
 export const NFT_CONTRACTS = {
   day1: "0x855831959f46c068977ea2230e86206b3350e674",

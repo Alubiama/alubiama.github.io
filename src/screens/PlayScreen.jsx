@@ -287,6 +287,9 @@ export default function PlayScreen() {
                 {isCheckingIn ? 'Recording...' : 'Record on Base'}
               </button>
             )}
+            {isContractDeployed && !onChainStatus?.canCheckIn && onChainStatus?.currentStreak > 0 && (
+              <span className="onchain-recorded">Recorded on Base ✓</span>
+            )}
           </div>
         )}
 

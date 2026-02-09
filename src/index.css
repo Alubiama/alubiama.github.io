@@ -665,6 +665,7 @@ body.dark-mode .notif-button:hover { border-color: #5c7cfa; color: #5c7cfa; }
 .onchain-button:disabled { opacity: 0.6; cursor: not-allowed; }
 body.dark-mode .onchain-button { background: #0052ff; border-color: #0052ff; }
 body.dark-mode .onchain-button:hover { background: #0040cc; border-color: #0040cc; }
+.onchain-recorded { font-size: 13px; color: #10b981; font-weight: 600; }
 
 /* ==================== PLAY STATS ==================== */
 .play-stats { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); display: flex; gap: 16px; z-index: 50; }

@@ -1,0 +1,20 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/StreakTracker.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\ncontract StreakTracker {\n\n    struct UserData {\n        uint32 currentStreak;\n        uint32 longestStreak;\n        uint40 lastCheckIn;\n        uint32 totalCheckIns;\n    }\n\n    mapping(address => UserData) public users;\n\n    uint256 public constant COOLDOWN = 20 hours;\n    uint256 public constant STREAK_WINDOW = 48 hours;\n\n    event CheckIn(address indexed user, uint32 newStreak, uint40 timestamp);\n    event StreakReset(address indexed user, uint32 previousStreak);\n    event NewLongestStreak(address indexed user, uint32 streak);\n\n    error TooSoon(uint256 timeRemaining);\n\n    function checkIn() external {\n        UserData storage user = users[msg.sender];\n        uint40 now_ = uint40(block.timestamp);\n\n        if (user.lastCheckIn > 0) {\n            uint256 elapsed = now_ - user.lastCheckIn;\n            if (elapsed < COOLDOWN) {\n                revert TooSoon(COOLDOWN - elapsed);\n            }\n            if (elapsed > STREAK_WINDOW) {\n                emit StreakReset(msg.sender, user.currentStreak);\n                user.currentStreak = 0;\n            }\n        }\n\n        user.currentStreak++;\n        user.totalCheckIns++;\n        user.lastCheckIn = now_;\n\n        if (user.currentStreak > user.longestStreak) {\n            user.longestStreak = user.currentStreak;\n            emit NewLongestStreak(msg.sender, user.longestStreak);\n        }\n\n        emit CheckIn(msg.sender, user.currentStreak, now_);\n    }\n\n    function getStatus(address user) external view returns (\n        uint32 currentStreak,\n        uint32 longestStreak,\n        uint40 lastCheckIn,\n        uint32 totalCheckIns,\n        bool canCheckIn,\n        uint256 timeUntilCheckIn\n    ) {\n        UserData storage data = users[user];\n        currentStreak = data.currentStreak;\n        longestStreak = data.longestStreak;\n        lastCheckIn = data.lastCheckIn;\n        totalCheckIns = data.totalCheckIns;\n\n        if (data.lastCheckIn == 0) {\n            canCheckIn = true;\n            timeUntilCheckIn = 0;\n        } else {\n            uint256 elapsed = block.timestamp - data.lastCheckIn;\n            if (elapsed >= COOLDOWN) {\n                canCheckIn = true;\n                timeUntilCheckIn = 0;\n                if (elapsed > STREAK_WINDOW) {\n                    currentStreak = 0;\n                }\n            } else {\n                canCheckIn = false;\n                timeUntilCheckIn = COOLDOWN - elapsed;\n            }\n        }\n    }\n\n    function getStreaks(address[] calldata addresses) external view returns (uint32[] memory streaks) {\n        streaks = new uint32[](addresses.length);\n        for (uint i = 0; i < addresses.length; i++) {\n            UserData storage data = users[addresses[i]];\n            if (data.lastCheckIn > 0 && block.timestamp - data.lastCheckIn > STREAK_WINDOW) {\n                streaks[i] = 0;\n            } else {\n                streaks[i] = data.currentStreak;\n            }\n        }\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "cancun",
+    "outputSelection": {
+      "*": {
+        "*": ["abi", "evm.bytecode", "evm.deployedBytecode"]
+      }
+    }
+  }
+}

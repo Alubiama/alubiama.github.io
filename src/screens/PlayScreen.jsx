@@ -5,8 +5,10 @@ import {
   getMilestoneByDay,
   getNextMilestone,
   getBasingLevel,
+  STREAK_CONTRACT,
 } from '../constants'
 import { useStreakFull } from '../useStreak'
+import { useOnChainStreak } from '../useOnChainStreak'
 
 const COOLDOWN_INCREMENT = 22
 const BASE_WIDTH = 240
@@ -29,6 +31,16 @@ export default function PlayScreen() {
   const [notifEnabled, setNotifEnabled] = useState(
     () => !!localStorage.getItem(NOTIF_KEY)
   )
+
+  // On-chain streak tracking
+  const {
+    isContractDeployed,
+    onChainStatus,
+    checkInOnChain,
+    isCheckingIn,
+    isConfirmed,
+    txHash,
+  } = useOnChainStreak(address)
 
   const [stretched, setStretched] = useState(false)
   const [fading, setFading] = useState(false)
@@ -86,6 +98,13 @@ export default function PlayScreen() {
       if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
     }
   }, [])
+
+  // Show toast when on-chain tx confirms
+  useEffect(() => {
+    if (isConfirmed && txHash) {
+      showToast('On-chain streak recorded!', 'success')
+    }
+  }, [isConfirmed, txHash, showToast])
 
   const handleClick = async () => {
     if (!isConnected || !address || animating || onCooldown) return
@@ -257,6 +276,15 @@ export default function PlayScreen() {
                 onClick={handleEnableNotifications}
               >
                 Enable daily reminders
+              </button>
+            )}
+            {isContractDeployed && onChainStatus?.canCheckIn && (
+              <button
+                className="onchain-button"
+                onClick={checkInOnChain}
+                disabled={isCheckingIn}
+              >
+                {isCheckingIn ? 'Recording...' : 'Record on Base'}
               </button>
             )}
           </div>

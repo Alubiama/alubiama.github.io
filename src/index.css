@@ -659,6 +659,13 @@ body.dark-mode .share-button:hover { background: #5c7cfa; color: #fff; }
 body.dark-mode .notif-button { border-color: #555; color: #aaa; }
 body.dark-mode .notif-button:hover { border-color: #5c7cfa; color: #5c7cfa; }
 
+/* On-chain check-in button */
+.onchain-button { padding: 10px 24px; border: 2px solid #0052ff; border-radius: 24px; background: #0052ff; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s ease; }
+.onchain-button:hover { background: #0040cc; border-color: #0040cc; }
+.onchain-button:disabled { opacity: 0.6; cursor: not-allowed; }
+body.dark-mode .onchain-button { background: #0052ff; border-color: #0052ff; }
+body.dark-mode .onchain-button:hover { background: #0040cc; border-color: #0040cc; }
+
 /* ==================== PLAY STATS ==================== */
 .play-stats { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); display: flex; gap: 16px; z-index: 50; }
 .play-stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }

@@ -45,8 +45,11 @@
 - [x] Notifications: "Enable daily reminders" button → sdk.actions.addMiniApp()
 - [x] Notification worker template (notification-worker/) — deploy to Cloudflare
 - [x] Lazy-load screens (Stats, Achievements, NFT) for faster initial load
+- [x] On-chain streaks: StreakTracker.sol smart contract + frontend integration
+- [ ] Deploy StreakTracker contract to Base Sepolia (npm run deploy:testnet)
+- [ ] Deploy StreakTracker contract to Base mainnet (npm run deploy:mainnet)
+- [ ] Update STREAK_CONTRACT address in src/constants.js after deployment
 - [ ] Deploy notification worker + add webhookUrl to farcaster.json (user does manually)
-- [ ] On-chain streaks: smart contract instead of localStorage (HIGH - on-chain activity)
 - [ ] Leaderboard: top streaks, competitive element (MEDIUM - engagement)
 - [ ] Daily Base Challenge: micro-tasks for learning Base (LOW - save for later)
 
@@ -72,5 +75,9 @@
 - src/screens/PlayScreen.jsx -- main button, 24h cooldown
 - src/screens/NftScreen.jsx -- NFT minting
 - src/constants.js -- contracts, milestones, ABI
+- src/useOnChainStreak.js -- on-chain streak hook (wagmi)
+- contracts/StreakTracker.sol -- on-chain streak smart contract
+- scripts/deploy.js -- Hardhat deployment script
+- hardhat.config.js -- Hardhat config for Base
 - .well-known/farcaster.json -- THE manifest
 - PROJECT_CONTEXT.md -- full context for new sessions

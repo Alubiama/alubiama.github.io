@@ -2,12 +2,11 @@ import { useState, useEffect } from 'react'
 import { useReadContracts } from 'wagmi'
 import { useSendCalls, useCallsStatus } from 'wagmi/experimental'
 import { encodeFunctionData, parseEther } from 'viem'
-import { NFT_MILESTONES, ZORA_COIN_ABI } from '../constants'
+import { NFT_MILESTONES, ZORA_COIN_ABI, PAYMASTER_URL } from '../constants'
 import { useStreakData } from '../useStreak'
 
 const REFERRER = '0x47550e121654FED9Bc17ed2f684E902a4B1fF102'
 const BUY_AMOUNT = parseEther('0.001')
-const PAYMASTER_URL = import.meta.env.VITE_PAYMASTER_URL
 
 export default function NftScreen() {
   const { streakCount, address } = useStreakData()

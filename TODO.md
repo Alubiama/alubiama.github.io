@@ -46,12 +46,11 @@
 - [x] Notification worker template (notification-worker/) — deploy to Cloudflare
 - [x] Lazy-load screens (Stats, Achievements, NFT) for faster initial load
 - [x] On-chain streaks: StreakTracker.sol smart contract + frontend integration
-- [ ] Deploy StreakTracker contract to Base Sepolia (npm run deploy:testnet)
-- [ ] Deploy StreakTracker contract to Base mainnet (npm run deploy:mainnet)
-- [ ] Update STREAK_CONTRACT address in src/constants.js after deployment
+- [x] Deploy StreakTracker contract to Base mainnet (0x8a13148BAd3b1275A67AB66C09ee1Dcf11fA9134)
+- [x] Leaderboard: top streaks on Base (LeaderboardScreen)
 - [ ] Deploy notification worker + add webhookUrl to farcaster.json (user does manually)
-- [ ] Leaderboard: top streaks, competitive element (MEDIUM - engagement)
 - [ ] Daily Base Challenge: micro-tasks for learning Base (LOW - save for later)
+- [ ] Verify contract on Basescan (makes it look professional)
 
 ## Builder Programs (user does manually)
 - [ ] Register on talent.app for Builder Rewards

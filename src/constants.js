@@ -1,3 +1,6 @@
+// Paymaster proxy URL for gasless transactions
+export const PAYMASTER_URL = "https://still-basing-paymaster.alubiama.workers.dev";
+
 // StreakTracker contract (deploy and update this address)
 export const STREAK_CONTRACT = "0x8a13148BAd3b1275A67AB66C09ee1Dcf11fA9134";
 

@@ -8,6 +8,7 @@ import PlayScreen from './screens/PlayScreen'
 const StatsScreen = lazy(() => import('./screens/StatsScreen'))
 const AchievementsScreen = lazy(() => import('./screens/AchievementsScreen'))
 const NftScreen = lazy(() => import('./screens/NftScreen'))
+const LeaderboardScreen = lazy(() => import('./screens/LeaderboardScreen'))
 
 function WalletButton({ isInFrame }) {
   const { address, isConnected } = useAccount()
@@ -160,6 +161,8 @@ export default function App() {
         return <AchievementsScreen />
       case 'nft':
         return <NftScreen />
+      case 'leaderboard':
+        return <LeaderboardScreen />
       default:
         return <PlayScreen />
     }
@@ -256,6 +259,13 @@ export default function App() {
         >
           <span className="nav-icon">{"\u{1F5BC}\uFE0F"}</span>
           NFT
+        </button>
+        <button
+          className={`nav-item ${activeTab === 'leaderboard' ? 'active' : ''}`}
+          onClick={() => setActiveTab('leaderboard')}
+        >
+          <span className="nav-icon">{"\u{1F3C6}"}</span>
+          Top
         </button>
       </nav>
     </div>

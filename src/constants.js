@@ -1,5 +1,5 @@
 // StreakTracker contract (deploy and update this address)
-export const STREAK_CONTRACT = "0x0000000000000000000000000000000000000000"; // TODO: Update after deployment
+export const STREAK_CONTRACT = "0x8a13148BAd3b1275A67AB66C09ee1Dcf11fA9134";
 
 // StreakTracker ABI
 export const STREAK_TRACKER_ABI = [

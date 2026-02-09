@@ -10,7 +10,7 @@
       "enabled": true,
       "runs": 200
     },
-    "evmVersion": "cancun",
+    "evmVersion": "shanghai",
     "outputSelection": {
       "*": {
         "*": ["abi", "evm.bytecode", "evm.deployedBytecode"]

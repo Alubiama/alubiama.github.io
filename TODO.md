@@ -34,11 +34,12 @@
 - [x] Fixed toast timer cleanup in PlayScreen
 - [ ] Consider code-splitting (main bundle is 1MB+ before gzip)
 
-## Priority: Paymaster (gasless minting)
+## Completed: Paymaster (gasless minting)
+- [x] Get CDP API key from Coinbase Developer Platform
+- [x] Set up proxy server for paymaster URL (Cloudflare Worker at still-basing-paymaster.alubiama.workers.dev)
+- [x] Integrate paymaster in NftScreen.jsx
 - [ ] Claim Paymaster Credits ($500) on base.dev (user does manually)
-- [ ] Get CDP API key from Coinbase Developer Platform
-- [ ] Set up proxy server for paymaster URL (Cloudflare Worker ready at paymaster-proxy/)
-- [ ] Test gasless NFT minting
+- [ ] Test gasless NFT minting (when Day 14 NFT unlocks)
 
 ## Priority: Features (ranked by grant impact)
 - [x] Social sharing: "Share your streak" button → Farcaster cast composer

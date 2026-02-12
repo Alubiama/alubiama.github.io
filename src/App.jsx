@@ -9,6 +9,7 @@ const StatsScreen = lazy(() => import('./screens/StatsScreen'))
 const AchievementsScreen = lazy(() => import('./screens/AchievementsScreen'))
 const NftScreen = lazy(() => import('./screens/NftScreen'))
 const LeaderboardScreen = lazy(() => import('./screens/LeaderboardScreen'))
+const QuestScreen = lazy(() => import('./screens/QuestScreen'))
 
 function WalletButton({ isInFrame }) {
   const { address, isConnected } = useAccount()
@@ -163,6 +164,8 @@ export default function App() {
         return <NftScreen />
       case 'leaderboard':
         return <LeaderboardScreen />
+      case 'quest':
+        return <QuestScreen />
       default:
         return <PlayScreen />
     }
@@ -237,7 +240,14 @@ export default function App() {
           onClick={() => setActiveTab('play')}
         >
           <span className="nav-icon">{"\u{1F535}"}</span>
-          Play
+          GM
+        </button>
+        <button
+          className={`nav-item ${activeTab === 'quest' ? 'active' : ''}`}
+          onClick={() => setActiveTab('quest')}
+        >
+          <span className="nav-icon">{"\u{1F3AF}"}</span>
+          Quest
         </button>
         <button
           className={`nav-item ${activeTab === 'stats' ? 'active' : ''}`}

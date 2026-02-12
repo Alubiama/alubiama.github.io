@@ -240,7 +240,7 @@ export default function App() {
           onClick={() => setActiveTab('play')}
         >
           <span className="nav-icon">{"\u{1F535}"}</span>
-          GM
+          Play
         </button>
         <button
           className={`nav-item ${activeTab === 'quest' ? 'active' : ''}`}
